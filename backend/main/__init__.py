@@ -2,13 +2,14 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 from flask_restful import Api
-import main.resources as resources
+import main.recursos as recursos
+
 api = Api()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(name)
     load_dotenv()
-    api.add_resource()
-    api.add_resource()
+    api.add_recursos()
+    api.add_recursos()
     api.init__app(app)
-    return app 
+    return app
