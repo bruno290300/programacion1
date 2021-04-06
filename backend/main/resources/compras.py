@@ -1,18 +1,21 @@
-from flask_restful import Resource
+from flask_restful import recursos
 from flask import request
 
+class Compras(recursos):
 
-class Compras(Resource):
-    def get(self):
-        return ''
-    def post(self):
-        return ''
+    def get(self, id):
 
+        if int(id) in Compras:
 
-class Compra(Resource):
-    def get(self):
-        return ""
-    def delete(self):
-        return''
-    def put(self):
-        return''
+            return Compras[int(id)]
+
+        return '', 404
+class Compra(recursos):
+
+    def get(self, id):
+
+        if int(id) in Compra:
+
+            return Compra[int(id)]
+
+        return '', 404

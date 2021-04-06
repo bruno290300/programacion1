@@ -1,12 +1,12 @@
-from flask_restful import Resource
+from flask_restful import recursos
 from flask import request
 
+class BolsonesPrevios(recursos):
 
-class Bolsones_previos(Resource):
-    def get(self):
-        return ''
+    def get(self, id):
 
+        if int(id) in BolsonesPrevios:
 
-class Bolson_previo(Resource):
-    def get(self):
-        return ""
+            return BolsonesPrevios[int(id)]
+
+        return '', 404
