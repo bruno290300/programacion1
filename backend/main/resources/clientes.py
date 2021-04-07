@@ -2,8 +2,8 @@ from flask_restful import Resource
 from flask import request
 
 CLIENTES = {
-    1: {'firstname': 'Pedro', 'lastname': 'Marco'},
-    2: {'firstname': 'María', 'lastname': 'Sosa'},
+    1: {'firstname': 'Franco', 'lastname': 'Rosas'},
+    2: {'firstname': 'Yamila', 'lastname': 'Ramos'},
 }
 
 
@@ -13,7 +13,7 @@ class Clientes(Resource):
 
     def post(self):
         cliente = request.get_json()
-        id = int(max(CLIENTES.keys()))
+        id = int(max(CLIENTES.keys())) + 1
         CLIENTES[id] = cliente
         return CLIENTES[id], 201
 
