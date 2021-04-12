@@ -15,7 +15,7 @@ class BolsonesPendientes(Resource):
 
     def delete(self, id):
         if int(id) in BOLSONESPENDIENTES:
-            del BOLSONESPENDIENTES[id]
+            del BOLSONESPENDIENTES[int(id)]
             return '', 204
         return '', 404
 

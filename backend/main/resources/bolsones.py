@@ -9,13 +9,8 @@ BOLSONES = {
 
 class Bolsones(Resource):
 
-    def get(self, id):
-
-        if int(id) in BOLSONES:
-
-            return BOLSONES[int(id)]
-
-        return '', 404
+    def get(self):
+        return BOLSONES
 
 
 class Bolson(Resource):
