@@ -1,5 +1,5 @@
-from .bolsones import Bolsones as BolsonesModels
-from .productos import Productos as ProductosModels
-from .compras import Compras as ComprasModels
-from .clientes import Clientes as ClientesModels
-from .proveedores import Proveedores as ProveedoresModels
+from .Bolson import Bolson as BolsonModel
+from .Cliente import Cliente as ClienteModel
+from .Proveedor import Proveedor as ProveedorModel
+from .Producto import Producto as ProductoModel
+from .Compra import Compra as CompraModel
