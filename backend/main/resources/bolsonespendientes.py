@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, jsonify
 
 BOLSONESPENDIENTES = {
     1: {'Primer bolson': 'Bolson1'},

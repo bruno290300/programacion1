@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, jsonify
 
 BOLSONESPREVIOS = {
     1: {'primer bolson previo': 'BolsonP1'},

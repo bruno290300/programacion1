@@ -1,12 +1,9 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, jsonify
 from .. import db
 from main.models import ProductoModel
 
-PRODUCTOS = {
-    1: {'primer producto': '1er producto'},
-    2: {'segundo producto': '2do producto'}
-}
+
 
 
 class Productos(Resource):
@@ -20,11 +17,11 @@ class Productos(Resource):
         return PRODUCTOS[id], 201
     """
     def get(self):
-        productos = db.session.query(ProductosModels).all()
-        return jsonify([productos.to_json() for producto in productos])
+        productos = db.session.query(ProductoModel).all()
+        return jsonify([producto.to_json() for producto in productos])
 
     def post(self):
-        producto = ProductosModels.from_json(request.get_json())
+        producto = ProductoModel.from_json(request.get_json())
         db.session.add(producto)
         db.session.commit()
         return producto.to_json(), 201
@@ -48,17 +45,17 @@ class Producto(Resource):
         return '', 404
     """
     def get(self, id):
-        producto = db.session.query(ProductosModels).get_or_404(id)
+        producto = db.session.query(ProductoModel).get_or_404(id)
         return producto.to_json()
 
     def delete(self, id):
-        producto = db.session.query(ProductosModels).get_or_404(id)
+        producto = db.session.query(ProductoModel).get_or_404(id)
         db.session.delete(producto)
         db.session.commit()
         return '', 204
 
     def put(self, id):
-        producto = db.session.query(ProductosModels).get_or_404(id)
+        producto = db.session.query(ProductoModel).get_or_404(id)
         data = request.get_json().items()
         for key, value in data:
             setattr(producto, key, value)
