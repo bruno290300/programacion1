@@ -3,13 +3,16 @@ from .. import db
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
+    proveedorid = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)
+    proveedor = db.relationship('Proveedor', back_populates='productos', uselist=False, single_parent=True)
 
     def __repr__(self):
-        return f'Producto: {self.nombre}'
+        return f'Producto: {self.nombre, self.proveedorid}'
     def to_json(self):
         producto_json = {
             'id': self.id,
-            'nombre': self.nombre
+            'nombre': self.nombre,
+            'proveedorid': self.proveedorid,
         }
         return producto_json
     
@@ -17,7 +20,9 @@ class Producto(db.Model):
     def from_json(producto_json):
         id = producto_json.get('id')
         nombre = producto_json.get('nombre')
+        proveedorid = producto_json.get('proveedorid')
         return Producto(
-            id = id,
-            nombre = nombre
-        ) 
+                id = id,
+                nombre = nombre,
+                proveedorid=proveedorid,
+                ) 
