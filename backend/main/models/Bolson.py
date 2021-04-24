@@ -7,6 +7,8 @@ class Bolson(db.Model):
     aprobado = db.Column(db.Boolean, default=False, nullable = False)
     fecha = db.Column(db.DateTime, nullable = False)
     compras = db.relationship('Compra', back_populates='bolson')
+    productosbolsones = db.relationship("ProductoBolson", back_populates="bolson", cascade="all, delete-orphan")
+
     def __repr__(self):
         return f'Bolson: {self.nombre}, {self.aprobado}, {self.fecha}'
     def to_json(self):
@@ -23,7 +25,7 @@ class Bolson(db.Model):
         id = bolson_json.get('id')
         nombre = bolson_json.get('nombre')
         aprobado = bolson_json.get('aprobado')
-        fecha = datetime.strptime(bolson_json.get('aprobado'), '%Y-%m-%d')
+        fecha = datetime.strptime(bolson_json.get('fecha'), '%Y-%m-%d')
         return Bolson(
             id = id,
             nombre = nombre,
