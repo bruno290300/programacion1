@@ -1,11 +1,7 @@
 from flask_restful import Resource
 from flask import request, jsonify
 
-BOLSONESPREVIOS = {
-    1: {'primer bolson previo': 'BolsonP1'},
-    2: {'segundo bolson previo': 'BolsonP2'},
-    3: {'tercer bolson previo': 'BolsonP3'},
-}
+
 
 
 class BolsonesPrevios(Resource):

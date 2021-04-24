@@ -1,11 +1,6 @@
 from flask_restful import Resource
 from flask import request, jsonify
 
-BOLSONESVENTA = {
-    1: {'primer bolson venta': 'Bolson1'},
-    2: {'segundo bolson venta': 'Bolson2'},
-    3: {'tercer bolson venta': 'Bolson3'},
-}
 
 
 class BolsonesVenta(Resource):

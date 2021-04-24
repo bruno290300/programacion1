@@ -22,7 +22,7 @@ class ProductoBolson(db.Model):
     @staticmethod
     def from_json(producto_json):
         id = producto_json.get('id')
-        productoid = producto_json.get('productoId')
+        productoId = producto_json.get('productoId')
         bolsonid = producto_json.get('bolsonid')
         return ProductoBolson(
             id = id,
