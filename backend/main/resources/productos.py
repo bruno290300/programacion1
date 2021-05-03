@@ -4,21 +4,28 @@ from .. import db
 from main.models import ProductoModel
 
 
-
-
 class Productos(Resource):
-    """
+
     def get(self):
-        return PRODUCTOS
-    def post(self):
-        producto = request.get_json()
-        id = int(max(PRODUCTOS.keys())) + 1
-        PRODUCTOS[id] = producto
-        return PRODUCTOS[id], 201
-    """
-    def get(self):
-        productos = db.session.query(ProductoModel).all()
-        return jsonify([producto.to_json() for producto in productos])
+
+        page = 1
+        per_page = 10
+        productos = db.session.query(ProductoModel)
+        if request.get_json():
+            filters = request.get_json().items()
+            for key, value in filters:
+                if key =="page":
+                    page = int(value)
+                if key == "per_page":
+                    per_page = int(value)
+        productos = productos.paginate(page,per_page,True,30)
+        return jsonify({ 'productos': [producto.to_json() for producto in productos.items],
+                  'total': productos.total,
+                  'pages': productos.pages,
+                  'page': page
+                  })
+
+        #return jsonify([producto.to_json() for producto in productos])
 
     def post(self):
         producto = ProductoModel.from_json(request.get_json())

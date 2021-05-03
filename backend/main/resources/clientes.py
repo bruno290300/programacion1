@@ -8,21 +8,30 @@ from main.models import ClienteModel
     #2: {'firstname': 'Yamila', 'lastname': 'Ramos'},
 #}
 
-
 class Clientes(Resource):
-    """
+    
     def get(self):
-        return CLIENTES
+        page = 1
+        per_page = 10
+        clientes = db.session.query(ClienteModel)
+        if request.get_json():
+            filters = request.get_json().items()
+            for key, value in filters:
+                if key =="page":
+                    page = int(value)
+                if key == "per_page":
+                    per_page = int(value)
+        clientes = clientes.paginate(page, per_page, True, 30)
+        return jsonify({
+                'clientes':[cliente.to_json() for cliente in clientes.items],
+                'total': clientes.total,
+                'pages': clientes.pages,
+                'page': page
 
-    def post(self):
-        cliente = request.get_json()
-        id = int(max(CLIENTES.keys())) + 1
-        CLIENTES[id] = cliente
-        return CLIENTES[id], 201
-    """
-    def get(self):
-        clientes = db.session.query(ClienteModel).all()
-        return jsonify([cliente.to_json() for cliente in clientes])
+                })
+                
+            
+                  
 
     def post(self):
         cliente = ClienteModel.from_json(request.get_json())

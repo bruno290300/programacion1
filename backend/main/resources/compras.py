@@ -5,18 +5,31 @@ from main.models import CompraModel
 
 
 class Compras(Resource):
-    """
+    
     def get(self):
-        return COMPRAS
-    def post(self):
-        compra = request.get_json()
-        id = int(max(COMPRAS.keys())) + 1
-        COMPRAS[id] = compra
-        return COMPRAS[id], 201
-    """
-    def get(self):
-        compras = db.session.query(CompraModel).all()
-        return jsonify([compra.to_json() for compra in compras])
+        page = 1
+        per_page = 10
+        compras = db.session.query(CompraModel)
+        if request.get_json():
+            filters = request.get_json().items()
+            for key, value in filters:
+                if key == "clienteId":
+                    compras = compras.filter(CompraModel.clienteId == value)
+                elif key == "bolsonId":
+                    compras = compras.filter(CompraModel.bolsonId == value)
+                elif key == 'page':
+                    page = int(value)
+                elif key == 'per_page':
+                    per_page = int(value)
+        
+        compras = compras.paginate(page, per_page, True, 30)
+        
+        return jsonify({
+            'compras': [compra.to_json() for compra in compras.items],
+            'total': compras.total,
+            'pages': compras.pages,
+            'page': page
+        })
 
     def post(self):
         compra = CompraModel.from_json(request.get_json())
