@@ -2,12 +2,14 @@ from flask_restful import Resource
 from flask import request, jsonify
 from .. import db
 from main.models import ProductoModel
-
+from main.auth.decorators import admin_required
+from main.auth.decorators import proveedor_or_admin_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from main.auth.decorators import proveedor_required
 
 class Productos(Resource):
-
+    @proveedor_or_admin_required
     def get(self):
-
         page = 1
         per_page = 10
         productos = db.session.query(ProductoModel)
@@ -18,49 +20,32 @@ class Productos(Resource):
                     page = int(value)
                 if key == "per_page":
                     per_page = int(value)
-        productos = productos.paginate(page,per_page,True,30)
+        productos = productos.paginate(page, per_page, True, 30)
         return jsonify({ 'productos': [producto.to_json() for producto in productos.items],
                   'total': productos.total,
                   'pages': productos.pages,
                   'page': page
                   })
 
-        #return jsonify([producto.to_json() for producto in productos])
-
+    @proveedor_required
     def post(self):
         producto = ProductoModel.from_json(request.get_json())
         db.session.add(producto)
         db.session.commit()
-        return producto.to_json(), 201
+        return producto.to_json()
 
 class Producto(Resource):
-    """
-    def get(self, id):
-        if int(id) in PRODUCTOS:
-            return PRODUCTOS[int(id)]
-        return '', 404
-    def delete(self, id):
-        if int(id) in PRODUCTOS:
-            del PRODUCTOS[int(id)]
-            return '', 204
-    def put(self, id):
-        if int(id) in PRODUCTOS:
-            producto = PRODUCTOS[int(id)]
-            data = request.get_json()
-            producto.update(data)
-            return producto, 201
-        return '', 404
-    """
+    @jwt_required(optional=True)
     def get(self, id):
         producto = db.session.query(ProductoModel).get_or_404(id)
         return producto.to_json()
-
+    @proveedor_or_admin_required
     def delete(self, id):
         producto = db.session.query(ProductoModel).get_or_404(id)
         db.session.delete(producto)
         db.session.commit()
         return '', 204
-
+    @proveedor_or_admin_required
     def put(self, id):
         producto = db.session.query(ProductoModel).get_or_404(id)
         data = request.get_json().items()

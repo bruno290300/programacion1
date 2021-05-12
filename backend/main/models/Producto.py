@@ -9,21 +9,21 @@ class Producto(db.Model):
     productosbolsones = db.relationship("ProductoBolson", back_populates="producto", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f'Producto: {self.nombre}'
+        return f'Producto: (self.nombre, self.usuarioid)'
     def to_json(self):
         producto_json = {
             'id': self.id,
-            'nombre': self.nombre,
-            'proveedor': self.proveedor.nombre
+            'nombre': str(self.nombre),
+            'usuario': self.usuario.nombre
         }
         return producto_json
     @staticmethod
     def from_json(producto_json):
         id = producto_json.get('id')
         nombre = producto_json.get('nombre')
-        proveedorid = producto_json.get('proveedorid')
+        usuarioid = producto_json.get('usuarioid')
         return Producto(
                 id = id,
                 nombre = nombre,
-                proveedorid=proveedorid,
+                usuarioid=usuarioid,
                 ) 

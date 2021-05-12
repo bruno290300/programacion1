@@ -3,12 +3,13 @@ from flask import request, jsonify
 from .. import db
 from main.models import BolsonModel
 import datetime as dt
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from main.auth.decorators import admin_required
 
 
 class BolsonesPrevios(Resource):
     date = dt.datetime.today() - dt.timedelta(days=7)
-
+    @admin_required
     def get(self):
         page = 1
         per_page = 10
@@ -24,7 +25,6 @@ class BolsonesPrevios(Resource):
                     per_page = int(value)
 
         bolsones = bolsones.paginate(page, per_page, True, 30)
-
         return jsonify({
             'bolsonesprevios': [bolson.to_json() for bolson in bolsones.items],
             'total': bolsones.total,
@@ -33,7 +33,10 @@ class BolsonesPrevios(Resource):
         })
 
 class BolsonPrevio(Resource):
+    @admin_required
     def get(self, id):
-        if int(id) in BOLSONESPREVIOS:
-            return BOLSONESPREVIOS[int(id)]
-        return "", 404
+         bolsonprevio = db.session.query(BolsonModel).get_or_404(id)
+         if bolsonprevio.fecha <= BolsonesPrevios.date:
+            return jsonify(bolsonprevio.to_json())
+         else:
+            return '', 404
