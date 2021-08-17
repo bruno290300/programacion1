@@ -1,7 +1,10 @@
 from .. import jwt
 from flask import jsonify
-from flask_jwt_extended import verify_jwt_in_request, get_jwt
+from flask_jwt_extended import verify_jwt_in_request, get_jwt, create_access_token
 from functools import wraps
+from datetime import datetime
+from .. import db
+from main.models import UsuarioModel
 
 def admin_required(fn):
     @wraps(fn)
@@ -79,3 +82,25 @@ def add_claims_to_access_token(usuario):
     }
     
     return claims
+
+
+def refresco_token(function):
+    def wrapper(*args, **kwargs):
+        verify_jwt_in_request()
+        claims = get_jwt()
+        id = int(claims["id"])
+        usuario = db.session.query(UsuarioModel).get_or_404(id)
+        diferencia = claims["exp"] - claims["iat"]
+        if (diferencia/60) > 10:
+            print("El tiempo de expiracion es mayor a dos minutos")
+            return function(*args, **kwargs)
+        else:
+            access_token = create_access_token(identity=usuario)
+            data = {
+                'id': str(usuario.id),
+                'access_token': access_token,
+                'rol': str(usuario.rol)
+            }
+            return data, 200
+    return wrapper
+

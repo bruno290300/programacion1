@@ -3,7 +3,7 @@ from flask import request, jsonify
 from .. import db
 from main.models import UsuarioModel
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from main.auth.decorators import admin_required
+from main.auth.decorators import admin_required, refresco_token
 
 #CLIENTES = {
     #1: {'firstname': 'Franco', 'lastname': 'Rosas'},
@@ -12,6 +12,7 @@ from main.auth.decorators import admin_required
 
 class Clientes(Resource):
     @jwt_required()  
+    @refresco_token
     def get(self):
         page = 1
         per_page = 10
