@@ -1,0 +1,12 @@
+.bg-gray{
+    background-color: rgb(199, 197, 197);
+}
+.card{
+    max-width: 27em;
+}
+.rounded{
+    border-radius: 1em!important;
+}
+.bg-color{
+    background-color: rgb(137, 138, 136);
+}
